@@ -1,0 +1,105 @@
+from translate import Translator
+import pyttsx3
+from tkinter import *
+import speech_recognition as sr
+from tkinter.messagebox import *
+
+language = 'en'
+
+def microphone():
+    global language
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        #print("start")
+        r.adjust_for_ambient_noise(source, duration=0.5)
+        audio = r.listen(source)
+        try:
+            donnée = r.recognize_google(audio)
+            trad_micro = Translator(from_lang='en', to_lang=language)
+            result_micro = trad_micro.translate(donnée) 
+            engine_micro = pyttsx3.init()
+            engine_micro.say(result_micro)
+            engine_micro.runAndWait()
+            #print(donnée)
+        except:
+            #print("Veuillez répeter")
+            showwarning("Veuillez répeter")
+
+            
+def traduction():
+    global language
+    global result
+    global affiche
+    reponse = entree.get()
+    trad = Translator(from_lang='fr', to_lang=language)
+    result = trad.translate(reponse)
+    engine = pyttsx3.init()
+    engine.say(result)
+    engine.runAndWait()
+    #affiche = Label(fenetre, text=result)
+    #affiche.pack(side=BOTTOM)
+
+
+def anglais():
+    global language
+    language = 'en'
+
+def espagnol():
+    global language
+    language = 'es'
+
+def allemand():
+    global language
+    language = 'de'
+
+def italien():
+    global language
+    language = 'it'
+
+def francais():
+    global language
+    language = 'fr'
+
+def nettoyer():
+    #global affiche
+    #affiche.pack_forget()
+    fenetre.destroy()
+
+fenetre = Tk()
+fenetre.geometry('350x200')
+#fenetre.configure(bg='grey')
+
+label = Label(fenetre, text='Application de Traduction Gratuite')
+label.pack(side=TOP, pady=15)
+
+
+bouton_vocale =Button(fenetre,text='🔊', command=traduction)
+bouton_vocale.pack(side=RIGHT, padx=8)
+
+bouton = Button(fenetre, text="Traduire", command=traduction)
+bouton.pack(side=RIGHT, padx=5)
+
+bouton_vocale =Button(fenetre, text='🎤', command=microphone)
+bouton_vocale.pack(side=LEFT, padx=8)
+
+entree = Entry(fenetre, width=30)
+entree.pack(side=LEFT, padx=8)
+
+menubar = Menu(fenetre)
+
+menu1 = Menu(menubar, tearoff=0)
+menu1.add_command(label="Anglais", command=anglais)
+menu1.add_command(label="Espagnol", command=espagnol)
+menu1.add_command(label="Allemand", command=allemand)
+menu1.add_command(label="Italien", command=italien)
+menu1.add_command(label="Français", command=francais)
+menubar.add_cascade(label="Language", menu=menu1)
+
+menu2 = Menu(menubar, tearoff=0)
+menu2.add_command(label="Nettoyer", command=nettoyer)
+menubar.add_cascade(label="Modifier", menu=menu2)
+
+
+fenetre.config(menu=menubar)
+
+fenetre.mainloop()
