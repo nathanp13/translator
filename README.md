@@ -1,7 +1,8 @@
 # translator
 
-Essai de traducteur avec Google Translate
+module 
 
-
-Test 2
-Test 3
+pyttsx3
+translate
+SpeechRecogniton
+tkinter
